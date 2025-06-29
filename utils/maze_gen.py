@@ -14,9 +14,19 @@ def generate_maze(width, height):
             nx, ny = x + dx, y + dy
             if 1 <= nx < width - 1 and 1 <= ny < height - 1:
                 if maze[ny][nx] == 1:
-                    maze[y + dy // 2][x + dx // 2] = 0  
+                    maze[y + dy // 2][x + dx // 2] = 0
                     carve(nx, ny)
 
-    carve(1, 1)
+    start = (1, 1)
+    carve(*start)
 
-    return maze
+    end = start
+    for y in range(height - 2, 0, -1):
+        for x in range(width - 2, 0, -1):
+            if maze[y][x] == 0:
+                end = (x, y)
+                break
+        if end != start:
+            break
+
+    return maze, start, end
