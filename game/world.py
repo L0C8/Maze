@@ -2,8 +2,8 @@ import os
 from panda3d.core import (
     TextureStage, Texture, NodePath, CardMaker, LVector3, Filename
 )
-from utils.config import TILE_SIZE
 
+TILE_SIZE = 1.0 
 ASSET_DIR = os.path.join(os.path.dirname(__file__), '..', 'assets')
 
 class World:
@@ -51,10 +51,10 @@ class World:
         cube = self.node.attach_new_node("wall")
 
         faces = [
-            ((0, 0, 0), (0, 0.5, 0)),    # front
-            ((180, 0, 0), (0, -0.5, 0)),  # back
-            ((90, 0, 0), (-0.5, 0, 0)),   # left
-            ((-90, 0, 0), (0.5, 0, 0)),   # right
+            ((0, 0, 0), (0, 0.5, 0)),      # front
+            ((180, 0, 0), (0, -0.5, 0)),   # back
+            ((90, 0, 0), (-0.5, 0, 0)),    # left
+            ((-90, 0, 0), (0.5, 0, 0)),    # right
         ]
         for hpr, offset in faces:
             cm = CardMaker('side')
@@ -63,6 +63,7 @@ class World:
             face.set_texture(self.wall_tex)
             face.set_pos(*offset)
             face.set_hpr(*hpr)
+            face.set_two_sided(True) 
 
         cube.set_scale(TILE_SIZE)
         cube.set_pos(x, y, TILE_SIZE / 2)

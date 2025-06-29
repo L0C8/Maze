@@ -1,4 +1,3 @@
-# player.py
 from panda3d.core import NodePath, Vec3
 from direct.showbase.DirectObject import DirectObject
 from panda3d.core import WindowProperties
@@ -8,13 +7,13 @@ MOUSE_SENSITIVITY = 0.2
 MOVE_SPEED = 5
 
 class PlayerController(DirectObject):
-    """Simple WASD controller with mouse look."""
 
     def __init__(self):
         super().__init__()
 
         self.node = NodePath("player")
         self.node.set_pos(1, 1, 0.5)
+        self.node.set_scale(0.5) 
 
         base.camera.reparent_to(self.node)
         base.camera.set_pos(0, 0, 0)
