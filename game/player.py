@@ -13,7 +13,8 @@ class PlayerController(DirectObject):
 
         self.node = NodePath("player")
         self.node.set_pos(1, 1, 0.5)
-        self.node.set_scale(0.5) 
+        self.node.set_scale(0.5)
+        self.node.reparent_to(render)
 
         base.camera.reparent_to(self.node)
         base.camera.set_pos(0, 0, 0)
