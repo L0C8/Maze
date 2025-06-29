@@ -48,9 +48,21 @@ class World:
         card.set_hpr(0, 90, 0)
 
     def add_wall(self, x, y):
-        cm = CardMaker('wall')
-        cm.set_frame(-0.5, 0.5, -0.5, 0.5)
-        wall = self.node.attach_new_node(cm.generate())
-        wall.set_texture(self.wall_tex)
-        wall.set_scale(1, 1, TILE_SIZE)
-        wall.set_pos(x, y, TILE_SIZE / 2)
+        cube = self.node.attach_new_node("wall")
+
+        faces = [
+            ((0, 0, 0), (0, 0.5, 0)),    # front
+            ((180, 0, 0), (0, -0.5, 0)),  # back
+            ((90, 0, 0), (-0.5, 0, 0)),   # left
+            ((-90, 0, 0), (0.5, 0, 0)),   # right
+        ]
+        for hpr, offset in faces:
+            cm = CardMaker('side')
+            cm.set_frame(-0.5, 0.5, -0.5, 0.5)
+            face = cube.attach_new_node(cm.generate())
+            face.set_texture(self.wall_tex)
+            face.set_pos(*offset)
+            face.set_hpr(*hpr)
+
+        cube.set_scale(TILE_SIZE)
+        cube.set_pos(x, y, TILE_SIZE / 2)
