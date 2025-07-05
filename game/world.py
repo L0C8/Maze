@@ -25,11 +25,11 @@ class World:
                 xpos = x * TILE_SIZE
                 ypos = y * TILE_SIZE
 
-                self.add_floor(xpos, ypos)
-                self.add_ceiling(xpos, ypos)
-
-                if maze[y][x] == 1:
-                    self.add_wall(xpos, ypos)
+                if maze[y][x] == 0:
+                    self.add_floor(xpos, ypos)
+                    self.add_ceiling(xpos, ypos)
+                else:
+                    self.add_walls_for_cell(x, y, maze, rows, cols)
 
     def add_floor(self, x, y):
         cm = CardMaker('floor')
@@ -47,23 +47,32 @@ class World:
         card.set_pos(x, y, TILE_SIZE)
         card.set_hpr(0, 90, 0)
 
-    def add_wall(self, x, y):
-        cube = self.node.attach_new_node("wall")
+    def add_wall_segment(self, x, y, h):
+        cm = CardMaker('wall')
+        cm.set_frame(-0.5, 0.5, -0.5, 0.5)
+        wall = self.node.attach_new_node(cm.generate())
+        wall.set_texture(self.wall_tex)
+        wall.set_pos(x, y, TILE_SIZE / 2)
+        wall.set_h(h)
+        wall.set_scale(TILE_SIZE)
+        wall.set_two_sided(True)
 
-        faces = [
-            ((0, 0, 0), (0, 0.5, 0)),      # front
-            ((180, 0, 0), (0, -0.5, 0)),   # back
-            ((90, 0, 0), (-0.5, 0, 0)),    # left
-            ((-90, 0, 0), (0.5, 0, 0)),    # right
-        ]
-        for hpr, offset in faces:
-            cm = CardMaker('side')
-            cm.set_frame(-0.5, 0.5, -0.5, 0.5)
-            face = cube.attach_new_node(cm.generate())
-            face.set_texture(self.wall_tex)
-            face.set_pos(*offset)
-            face.set_hpr(*hpr)
-            face.set_two_sided(True) 
+    def add_walls_for_cell(self, cx, cy, maze, rows, cols):
+        xpos = cx * TILE_SIZE
+        ypos = cy * TILE_SIZE
 
-        cube.set_scale(TILE_SIZE)
-        cube.set_pos(x, y, TILE_SIZE / 2)
+        # North (+y)
+        if cy + 1 >= rows or maze[cy + 1][cx] == 0:
+            self.add_wall_segment(xpos, ypos + TILE_SIZE / 2, 0)
+
+        # South (-y)
+        if cy - 1 < 0 or maze[cy - 1][cx] == 0:
+            self.add_wall_segment(xpos, ypos - TILE_SIZE / 2, 180)
+
+        # West (-x)
+        if cx - 1 < 0 or maze[cy][cx - 1] == 0:
+            self.add_wall_segment(xpos - TILE_SIZE / 2, ypos, 90)
+
+        # East (+x)
+        if cx + 1 >= cols or maze[cy][cx + 1] == 0:
+            self.add_wall_segment(xpos + TILE_SIZE / 2, ypos, -90)
