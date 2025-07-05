@@ -19,7 +19,7 @@ class PlayerController(DirectObject):
         base.camera.set_pos(0, 0, 0)
         base.camera.set_hpr(0, 0, 0)
 
-        self.key_map = {"w": False, "s": False, "a": False, "d": False}
+        self.key_map = {"w": False, "s": False, "a": False, "d": False, "e": False, "q": False}
         for key in self.key_map:
             self.accept(key, self.set_key, [key, True])
             self.accept(f"{key}-up", self.set_key, [key, False])
@@ -52,6 +52,10 @@ class PlayerController(DirectObject):
             self.node.set_pos(self.node, Vec3(-speed, 0, 0))
         if self.key_map["d"]:
             self.node.set_pos(self.node, Vec3(speed, 0, 0))
+        if self.key_map["e"]:
+            self.node.set_pos(self.node, Vec3(0, 0, speed))
+        if self.key_map["q"]:
+            self.node.set_pos(self.node, Vec3(0, 0, -speed))
 
         if base.mouseWatcherNode.hasMouse():
             pointer = base.win.get_pointer(0)
